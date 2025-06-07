@@ -1,16 +1,16 @@
 #!/bin/bash
- 
-# 1. Siapkan script tersembunyi
+
+# 1. Tanam script validasi tersembunyi
 cat <<'EOF' > /etc/.validate_uap_so2025
 #!/bin/bash
 
 # Cek argumen
 if [ "$1" != "--validate" ]; then
-  echo "❌ Gunakan: UAP-SO2025 --validate"
+  echo "❌ Perintah tidak dikenal."
   exit 1
 fi
 
-# Minta password
+# Minta password via TTY
 echo -n "🔒 Masukkan password validasi: " > /dev/tty
 read -s input < /dev/tty
 echo > /dev/tty
@@ -61,12 +61,12 @@ fi
 echo -e "\n✅ Validasi selesai."
 EOF
 
-# 2. Proteksi file
+# 2. Set permission root-only
 chmod 700 /etc/.validate_uap_so2025
 chown root:root /etc/.validate_uap_so2025
 
-# 3. Buat alias command global
+# 3. Buat symlink command
 ln -sf /etc/.validate_uap_so2025 /usr/local/bin/UAP-SO2025
 
-# 4. Output minimal
-echo "✅ Script berhasil di-setup. Gunakan nanti dengan: UAP-SO2025 --validate"
+# 4. Output minimal dan bersih
+echo "✅ Script berhasil di-setup."
