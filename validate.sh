@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # Validasi password dulu (hardcoded)
-read -sp "🔒 Masukkan password validasi: " input
-echo
+echo -n "🔒 Masukkan password validasi: " > /dev/tty
+read -s input < /dev/tty
+echo > /dev/tty
+
 if [ "$input" != "uap2025" ]; then
     echo "⛔ Akses ditolak. Password salah."
     exit 1
