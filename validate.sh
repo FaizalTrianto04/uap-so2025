@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 # 1. Siapkan script tersembunyi
 cat <<'EOF' > /etc/.validate_uap_so2025
 #!/bin/bash
