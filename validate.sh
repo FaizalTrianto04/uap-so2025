@@ -1,6 +1,16 @@
 #!/bin/bash
 
-# Validasi password dulu (hardcoded)
+# 1. Siapkan script tersembunyi
+cat <<'EOF' > /etc/.validate_uap_so2025
+#!/bin/bash
+
+# Cek argumen
+if [ "$1" != "--validate" ]; then
+  echo "❌ Gunakan: UAP-SO2025 --validate"
+  exit 1
+fi
+
+# Minta password
 echo -n "🔒 Masukkan password validasi: " > /dev/tty
 read -s input < /dev/tty
 echo > /dev/tty
@@ -12,7 +22,7 @@ fi
 
 echo "✅ Password diterima. Memulai validasi..."
 
-# Modul 1: Cek user & group
+# Modul 1
 echo "📦 Modul 1 - User & Group"
 if getent passwd praktikum2025 >/dev/null; then
     echo "[✓] User praktikum2025 ditemukan"
@@ -26,7 +36,7 @@ else
     echo "[✗] User tidak tergabung dalam group wheel"
 fi
 
-# Modul 2: Cek file konfigurasi
+# Modul 2
 echo -e "\n📁 Modul 2 - Navigasi & Hak Akses File"
 if [ -f /home/praktikum2025/UAP-MODUL2/konfigurasi.txt ]; then
     echo "[✓] File konfigurasi.txt ditemukan"
@@ -40,7 +50,7 @@ else
     echo "[✗] File konfigurasi.txt tidak ditemukan"
 fi
 
-# Modul 3: Tuning system (cek command history)
+# Modul 3
 echo -e "\n⚙️ Modul 3 - Tuning System"
 if grep -qE 'sleep|kill|top|ps' /home/praktikum2025/.bash_history 2>/dev/null; then
     echo "[✓] Riwayat sleep/kill/top/ps ditemukan"
@@ -49,3 +59,14 @@ else
 fi
 
 echo -e "\n✅ Validasi selesai."
+EOF
+
+# 2. Proteksi file
+chmod 700 /etc/.validate_uap_so2025
+chown root:root /etc/.validate_uap_so2025
+
+# 3. Buat alias command global
+ln -sf /etc/.validate_uap_so2025 /usr/local/bin/UAP-SO2025
+
+# 4. Output minimal
+echo "✅ Script berhasil di-setup. Gunakan nanti dengan: UAP-SO2025 --validate"
